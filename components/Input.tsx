@@ -1,5 +1,12 @@
 "use client";
 import { app } from "@/firebase";
+import { time } from "console";
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  serverTimestamp,
+} from "firebase/firestore";
 import {
   getDownloadURL,
   getStorage,
@@ -11,12 +18,14 @@ import React, { ChangeEvent, useEffect } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 
 export default function Input() {
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
   const [imageUploading, setImageUploading] = React.useState<boolean>(false);
+  const [text, setText] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
-
+  const db = getFirestore(app);
   useEffect(() => {
     if (selectedImage) {
       handelUploadImageToServer();
@@ -61,6 +70,23 @@ export default function Input() {
       setImageUrl(URL.createObjectURL(file));
     }
   };
+
+  const handlePost = async () => {
+    setLoading(true);
+    console.log(session);
+    const docRef = await addDoc(collection(db, "posts"), {
+      uid: session?.user?.uId,
+      userName: session?.user?.userName,
+      text: text,
+      image: imageUrl,
+      timestamp: serverTimestamp(),
+      profileImage: session?.user?.image,
+    });
+    setLoading(false);
+    setText("");
+    setImageUrl("");
+    setSelectedImage(null);
+  };
   if (!session) return null;
   return (
     <div className="flex border-b border-gray-200 p-3 space-x-3 w-full">
@@ -74,12 +100,15 @@ export default function Input() {
           className="w-full border-none outline-none tracking-wide min-h-[50px] text-gray-700"
           placeholder="Whats happening"
           rows={2}
+          onChange={(e) => setText(e.target.value)}
         ></textarea>
         {selectedImage && (
           <img
             src={imageUrl}
             alt="uplodedImage"
-            className="w-full max-h-[250px] object-cover cursor-pointer"
+            className={`w-full max-h-[250px] object-cover cursor-pointer ${
+              imageUploading && "animate-pulse"
+            }`}
           />
         )}
         <div className="flex items-center justify-between pt-2.5">
@@ -94,7 +123,11 @@ export default function Input() {
             onChange={handleImageUpload}
             className="hidden"
           />
-          <button className="bg-blue-400 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-95 disabled:opacity-50">
+          <button
+            disabled={text.trim() === "" || loading || imageUploading}
+            className="bg-blue-400 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-95 disabled:opacity-50"
+            onClick={handlePost}
+          >
             Post
           </button>
         </div>
