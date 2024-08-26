@@ -81,11 +81,13 @@ export default function Input() {
       image: imageUrl,
       timestamp: serverTimestamp(),
       profileImage: session?.user?.image,
+      name: session?.user?.name,
     });
     setLoading(false);
     setText("");
     setImageUrl("");
     setSelectedImage(null);
+    location.reload();
   };
   if (!session) return null;
   return (
