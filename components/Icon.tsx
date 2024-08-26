@@ -20,8 +20,9 @@ import {
 
 type IconProps = {
   id: string;
+  uId?: string;
 };
-export default function Icon({ id }: IconProps) {
+export default function Icon({ id, uId }: IconProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState<any[]>([]);
   const { data: session }: any = useSession();
@@ -34,7 +35,7 @@ export default function Icon({ id }: IconProps) {
   }, [db]);
 
   useEffect(() => {
-    if (likes.length) {
+    if (likes.length && session) {
       setIsLiked(
         likes.findIndex((like) => like.id === session.user.uId) !== -1
       );
@@ -55,6 +56,20 @@ export default function Icon({ id }: IconProps) {
       signIn();
     }
   };
+
+  const deletePost = async () => {
+    if (session) {
+      if (window.confirm("Are you sure you want to delete this post?")) {
+        if (session.user.uId === uId) {
+          await deleteDoc(doc(db, "posts", id)).then(() => {
+            window.location.reload();
+          });
+        } else {
+          alert("You can't delete this post");
+        }
+      }
+    }
+  };
   return (
     <div className="flex justify-start gap-5 p-2 text-gray-500">
       <HiOutlineChat className="h-8 w-8 rounded-full transition duration-500 ease-in-out p-2 hover:text-sky-500 hover:bg-sky-100" />
@@ -72,8 +87,12 @@ export default function Icon({ id }: IconProps) {
         )}
         {likes.length > 0 && <span className="text-xs">{likes.length}</span>}
       </div>
-
-      <HiOutlineTrash className="h-8 w-8 rounded-full transition duration-500 ease-in-out p-2 hover:text-red-500 hover:bg-red-100" />
+      {session?.user.uId === uId && (
+        <HiOutlineTrash
+          onClick={deletePost}
+          className="h-8 w-8 rounded-full transition duration-500 ease-in-out p-2 hover:text-red-500 hover:bg-red-100"
+        />
+      )}
     </div>
   );
 }

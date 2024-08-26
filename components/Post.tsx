@@ -45,7 +45,7 @@ export default function Post({ post }: PostProps) {
             />
           </Link>
         )}
-        <Icon id={post.id} />
+        <Icon id={post.id} uId={post.uid} />
       </div>
     </div>
   );
