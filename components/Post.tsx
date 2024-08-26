@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { HiDotsHorizontal } from "react-icons/hi";
+import Icon from "./Icon";
 
 export type PostDataType = {
   id: string;
@@ -18,7 +19,7 @@ type PostProps = {
 };
 export default function Post({ post }: PostProps) {
   return (
-    <div className=" flex p-3 border-b border-gray-200">
+    <div className=" flex p-3 border-b border-gray-200 hover:bg-gray-50">
       <img
         className="h-11 w-11 rounded-full mr-4"
         src={post.profileImage}
@@ -44,6 +45,7 @@ export default function Post({ post }: PostProps) {
             />
           </Link>
         )}
+        <Icon />
       </div>
     </div>
   );
