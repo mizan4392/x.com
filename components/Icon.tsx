@@ -1,4 +1,5 @@
 "use client";
+import { modalState, postIdState } from "@/atom/modalAtom";
 import { app } from "@/firebase";
 import {
   collection,
@@ -17,6 +18,7 @@ import {
   HiOutlineHeart,
   HiOutlineTrash,
 } from "react-icons/hi";
+import { useRecoilState } from "recoil";
 
 type IconProps = {
   id: string;
@@ -26,6 +28,8 @@ export default function Icon({ id, uId }: IconProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState<any[]>([]);
   const { data: session }: any = useSession();
+  const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
   const db = getFirestore(app);
 
   useEffect(() => {
@@ -72,7 +76,17 @@ export default function Icon({ id, uId }: IconProps) {
   };
   return (
     <div className="flex justify-start gap-5 p-2 text-gray-500">
-      <HiOutlineChat className="h-8 w-8 rounded-full transition duration-500 ease-in-out p-2 hover:text-sky-500 hover:bg-sky-100" />
+      <HiOutlineChat
+        onClick={() => {
+          if (!session) {
+            signIn();
+          } else {
+            setOpen(!open);
+            setPostId(id);
+          }
+        }}
+        className="h-8 w-8 rounded-full transition duration-500 ease-in-out p-2 hover:text-sky-500 hover:bg-sky-100"
+      />
       <div className=" flex items-center">
         {isLiked ? (
           <HiHeart

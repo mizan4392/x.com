@@ -22,7 +22,7 @@ export default function Post({ post }: PostProps) {
     <div className=" flex p-3 border-b border-gray-200 hover:bg-gray-50">
       <img
         className="h-11 w-11 rounded-full mr-4"
-        src={post.profileImage}
+        src={post.profileImage || ""}
         alt="user-image"
       />
       <div className=" flex-1">
@@ -45,7 +45,7 @@ export default function Post({ post }: PostProps) {
             />
           </Link>
         )}
-        <Icon id={post.id} uId={post.uid} />
+        <Icon id={post.id} uId={post.uid as any} />
       </div>
     </div>
   );
