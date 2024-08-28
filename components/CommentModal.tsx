@@ -1,12 +1,21 @@
 "use client";
 import { modalState, postIdState } from "@/atom/modalAtom";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import Modal from "react-modal";
 import { HiX } from "react-icons/hi";
-import { doc, getFirestore, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getFirestore,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
 import { app } from "@/firebase";
 import { useSession } from "next-auth/react";
+
+import { useRouter } from "next/navigation";
 
 export default function CommentModal() {
   const [open, setOpen] = useRecoilState(modalState);
@@ -14,7 +23,8 @@ export default function CommentModal() {
   const [post, setPost] = useState<any>(null);
   const [input, setInput] = useState("");
   const db = getFirestore(app);
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
+  const router = useRouter();
   useEffect(() => {
     if (postId !== "") {
       const postRef = doc(db, "posts", postId);
@@ -32,7 +42,17 @@ export default function CommentModal() {
   }, [postId]);
 
   const sendComment = async () => {
-    console.log("Comment", input);
+    addDoc(collection(db, "posts", postId, "comments"), {
+      name: session?.user?.name,
+      userName: session?.user?.userName,
+      profileImage: session?.user?.image,
+      comment: input,
+      timestamp: serverTimestamp(),
+    }).then(() => {
+      setInput("");
+      setOpen(false);
+      router.push(`/posts/${postId}`);
+    });
   };
 
   return (
