@@ -30,7 +30,12 @@ export default function Comments({ id }: CommentsProps) {
   return (
     <div>
       {comments.map((comment) => (
-        <Comment key={comment.id} comment={comment.data()} id={comment.id} />
+        <Comment
+          key={comment.id}
+          comment={comment.data()}
+          commentId={comment?.id}
+          postId={id}
+        />
       ))}
     </div>
   );
