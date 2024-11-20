@@ -41,7 +41,8 @@ export default function Post({ post }: PostProps) {
             <img
               src={post.image}
               alt="post-image"
-              className=" rounded-2xl mr-2"
+              className=" rounded-2xl mr-2 h-[520px]"
+              height={"20px"}
             />
           </Link>
         )}
