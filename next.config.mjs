@@ -5,8 +5,8 @@ const nextConfig = {
   // // Optional: if you're using basePath (recommended for subpath deployments)
   // basePath: '/app1',
 
-  basePath: "/",
-  assetPrefix: "/",
+
+
 
 };
 
