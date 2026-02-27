@@ -30,7 +30,6 @@ export default function CommentModal() {
       const postRef = doc(db, "posts", postId);
       const unsubscribe = onSnapshot(postRef, (doc) => {
         if (doc.exists()) {
-          console.log("Document data:", doc.data());
           setPost(doc.data());
         }
       });

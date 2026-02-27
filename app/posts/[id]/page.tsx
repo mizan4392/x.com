@@ -1,10 +1,10 @@
-import React from "react";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "@/firebase";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi";
 import Post, { PostDataType } from "@/components/Post";
 import Comments from "@/components/Comments";
+export const dynamic = "force-dynamic";
 export default async function PostPage({ params }: any) {
   const db = getFirestore(app);
   let data: any = {};
@@ -12,6 +12,7 @@ export default async function PostPage({ params }: any) {
   if (querySnapshot.exists()) {
     data = { ...querySnapshot.data(), id: querySnapshot.id };
   }
+
   return (
     <div className="max-w-xl mx-auto border-r border-l min-h-screen">
       <div className=" flex items-center space-x-2 py-2 px-3 sticky top-0 z-50 border-white border-b hover:border-gray-200">

@@ -1,6 +1,6 @@
 "use client";
 import { app } from "@/firebase";
-import { time } from "console";
+
 import {
   addDoc,
   collection,
@@ -44,22 +44,19 @@ export default function Input() {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
       },
       (error) => {
-        console.log(error);
         setImageUploading(false);
         setSelectedImage(null);
         setImageUrl("");
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
           setImageUploading(false);
 
           setImageUrl(downloadURL);
         });
-      }
+      },
     );
   };
 
@@ -73,7 +70,7 @@ export default function Input() {
 
   const handlePost = async () => {
     setLoading(true);
-    console.log(session);
+
     const docRef = await addDoc(collection(db, "posts"), {
       uid: session?.user?.uId,
       userName: session?.user?.userName,

@@ -22,13 +22,6 @@ COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
 # If using npm
 RUN npm install --legacy-peer-deps
 
-# If using yarn (uncomment if needed)
-# RUN yarn install --frozen-lockfile
-
-# If using pnpm (uncomment if needed)
-# RUN npm install -g pnpm && pnpm install
-
-# Copy project files
 COPY . .
 
 # Build the Next.js app
