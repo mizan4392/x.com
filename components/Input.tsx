@@ -28,36 +28,36 @@ export default function Input() {
   const db = getFirestore(app);
   useEffect(() => {
     if (selectedImage) {
-      handelUploadImageToServer();
+      uploadImageToServer();
     }
   }, [selectedImage]);
 
-  const handelUploadImageToServer = async () => {
+  const uploadImageToServer = async () => {
     if (!selectedImage) return;
     setImageUploading(true);
-    const store = getStorage(app);
-    const fileName = new Date().getTime() + "-" + selectedImage?.name;
-    const storageRef = ref(store, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, selectedImage);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      },
-      (error) => {
-        setImageUploading(false);
-        setSelectedImage(null);
-        setImageUrl("");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImageUploading(false);
 
-          setImageUrl(downloadURL);
-        });
-      },
-    );
+    const apiUrl = process.env.NEXT_PUBLIC_STORAGE_API;
+    if (!apiUrl) {
+      console.error("Storage API URL is not defined");
+      setImageUploading(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("files", selectedImage);
+    formData.append("projectName", "social");
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setImageUrl(data[0]);
+    }
+    setImageUploading(false);
   };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +103,7 @@ export default function Input() {
         ></textarea>
         {selectedImage && (
           <img
-            src={imageUrl}
+            src={`${process.env.NEXT_PUBLIC_ASSET_API}/${imageUrl}`}
             alt="uplodedImage"
             className={`w-full max-h-[250px] object-cover cursor-pointer ${
               imageUploading && "animate-pulse"

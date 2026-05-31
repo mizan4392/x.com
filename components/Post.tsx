@@ -39,7 +39,7 @@ export default function Post({ post }: PostProps) {
         {post.image && (
           <Link href={`/post/${post.id}`}>
             <img
-              src={post.image}
+              src={`${process.env.NEXT_PUBLIC_ASSET_API}/${post.image}`}
               alt="post-image"
               className=" rounded-2xl mr-2 h-[520px]"
               height={"20px"}
