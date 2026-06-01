@@ -37,7 +37,7 @@ export default function Post({ post }: PostProps) {
           <p className="text-gray-800 text-sm my-3">{post.text}</p>
         </Link>
         {post.image && (
-          <Link href={`/post/${post.id}`}>
+          <Link href={`/posts/${post.id}`}>
             <img
               src={`${process.env.NEXT_PUBLIC_ASSET_API}/${post.image}`}
               alt="post-image"
