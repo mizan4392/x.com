@@ -23,6 +23,7 @@ COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
 RUN npm install --legacy-peer-deps
 
 COPY . .
+COPY .env .env
 
 # Build the Next.js app
 RUN npm run build
