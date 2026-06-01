@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  social:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: social
+    restart: unless-stopped
+    ports:
+      - "5001:3000"
+    env_file:
+      - .env
