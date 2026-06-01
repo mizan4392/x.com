@@ -33,7 +33,7 @@ export default function Post({ post }: PostProps) {
           </div>
           <HiDotsHorizontal className="text-sm" />
         </div>
-        <Link href={`/post/${post.id}`}>
+        <Link href={`/posts/${post.id}`}>
           <p className="text-gray-800 text-sm my-3">{post.text}</p>
         </Link>
         {post.image && (
